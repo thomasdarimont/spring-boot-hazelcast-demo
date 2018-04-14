@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
+import java.net.Inet4Address;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,8 +19,14 @@ class DemoController {
     private final HttpSession session;
 
     @GetMapping
-    Object getData() {
-        return session.getAttribute("data");
+    Object getData() throws Exception {
+        Map<String, String> data = (Map<String, String>) session.getAttribute("data");
+
+        if (data != null) {
+            data.put("node", Inet4Address.getLocalHost().getHostAddress());
+        }
+
+        return data;
     }
 
     @GetMapping("{key}/{value}")
